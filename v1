@@ -1,0 +1,1456 @@
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+
+// UTF-8 safe Base64 encoding/decoding for URL sharing
+const encodeData = (data) => {
+  try {
+    const jsonStr = JSON.stringify(data);
+    // UTF-8 문자를 안전하게 base64로 인코딩
+    const utf8Bytes = new TextEncoder().encode(jsonStr);
+    const binaryStr = Array.from(utf8Bytes).map(byte => String.fromCharCode(byte)).join('');
+    const base64 = btoa(binaryStr);
+    // URL-safe base64로 변환
+    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  } catch (e) {
+    console.error('Encoding error:', e);
+    return null;
+  }
+};
+
+const decodeData = (encoded) => {
+  try {
+    // URL-safe base64를 일반 base64로 복원
+    let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+    // 패딩 복원
+    while (base64.length % 4) {
+      base64 += '=';
+    }
+    const binaryStr = atob(base64);
+    const utf8Bytes = new Uint8Array(binaryStr.split('').map(char => char.charCodeAt(0)));
+    const jsonStr = new TextDecoder().decode(utf8Bytes);
+    return JSON.parse(jsonStr);
+  } catch (e) {
+    console.error('Decoding error:', e);
+    return null;
+  }
+};
+
+// Grid generation algorithm
+const generateWordSearchGrid = (words, gridSize, allowDiagonal, allowReverse) => {
+  const grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''));
+  const placements = [];
+  const directions = [
+    { dx: 1, dy: 0, name: 'horizontal' },
+    { dx: 0, dy: 1, name: 'vertical' },
+  ];
+  
+  if (allowDiagonal) {
+    directions.push(
+      { dx: 1, dy: 1, name: 'diagonal-down' },
+      { dx: 1, dy: -1, name: 'diagonal-up' }
+    );
+  }
+
+  const canPlace = (word, startX, startY, dx, dy) => {
+    for (let i = 0; i < word.length; i++) {
+      const x = startX + i * dx;
+      const y = startY + i * dy;
+      if (x < 0 || x >= gridSize || y < 0 || y >= gridSize) return false;
+      if (grid[y][x] !== '' && grid[y][x] !== word[i]) return false;
+    }
+    return true;
+  };
+
+  const placeWord = (word, startX, startY, dx, dy) => {
+    const cells = [];
+    for (let i = 0; i < word.length; i++) {
+      const x = startX + i * dx;
+      const y = startY + i * dy;
+      grid[y][x] = word[i];
+      cells.push({ x, y });
+    }
+    return cells;
+  };
+
+  // Sort words by length (longer first for better placement)
+  const sortedWords = [...words].sort((a, b) => b.length - a.length);
+
+  for (const originalWord of sortedWords) {
+    let word = originalWord.toUpperCase();
+    let placed = false;
+    let attempts = 0;
+    const maxAttempts = 100;
+
+    while (!placed && attempts < maxAttempts) {
+      const shouldReverse = allowReverse && Math.random() > 0.5;
+      const wordToPlace = shouldReverse ? word.split('').reverse().join('') : word;
+      const dir = directions[Math.floor(Math.random() * directions.length)];
+      const startX = Math.floor(Math.random() * gridSize);
+      const startY = Math.floor(Math.random() * gridSize);
+
+      if (canPlace(wordToPlace, startX, startY, dir.dx, dir.dy)) {
+        const cells = placeWord(wordToPlace, startX, startY, dir.dx, dir.dy);
+        placements.push({
+          word: originalWord.toUpperCase(),
+          cells,
+          direction: dir.name,
+          reversed: shouldReverse
+        });
+        placed = true;
+      }
+      attempts++;
+    }
+  }
+
+  // Fill empty cells with random letters
+  const isKorean = words.some(word => /[가-힣]/.test(word));
+  const koreanChars = '가나다라마바사아자차카타파하고노도로모보소오조초코토포호구누두루무부수우주추쿠투푸후';
+  const englishChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const fillChars = isKorean ? koreanChars : englishChars;
+
+  for (let y = 0; y < gridSize; y++) {
+    for (let x = 0; x < gridSize; x++) {
+      if (grid[y][x] === '') {
+        grid[y][x] = fillChars[Math.floor(Math.random() * fillChars.length)];
+      }
+    }
+  }
+
+  return { grid, placements };
+};
+
+// Confetti component
+const Confetti = ({ active }) => {
+  if (!active) return null;
+  
+  const confettiPieces = Array(50).fill(null).map((_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    delay: Math.random() * 2,
+    duration: 2 + Math.random() * 2,
+    color: ['#FFD93D', '#6BCB77', '#4D96FF', '#FF6B6B', '#C9B1FF'][Math.floor(Math.random() * 5)]
+  }));
+
+  return (
+    <div className="confetti-container">
+      {confettiPieces.map(piece => (
+        <div
+          key={piece.id}
+          className="confetti-piece"
+          style={{
+            left: `${piece.left}%`,
+            animationDelay: `${piece.delay}s`,
+            animationDuration: `${piece.duration}s`,
+            backgroundColor: piece.color
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Main App Component
+export default function EduPuzzleMaker() {
+  const [mode, setMode] = useState('home'); // 'home', 'create', 'play'
+  const [puzzleData, setPuzzleData] = useState(null);
+  const [title, setTitle] = useState('');
+  const [wordsInput, setWordsInput] = useState('');
+  const [difficulty, setDifficulty] = useState('easy');
+  const [generatedUrl, setGeneratedUrl] = useState('');
+  const [baseUrl, setBaseUrl] = useState('');
+  const [puzzleCode, setPuzzleCode] = useState('');
+  
+  // Play mode states
+  const [grid, setGrid] = useState([]);
+  const [placements, setPlacements] = useState([]);
+  const [foundWords, setFoundWords] = useState([]);
+  const [selecting, setSelecting] = useState(false);
+  const [selectedCells, setSelectedCells] = useState([]);
+  const [startCell, setStartCell] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [wrongSelection, setWrongSelection] = useState(false);
+  const gridRef = useRef(null);
+
+  // Check URL for puzzle data on load
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const data = params.get('puzzle');
+    if (data) {
+      try {
+        const decoded = decodeData(data);
+        if (decoded) {
+          setPuzzleData(decoded);
+          setMode('play');
+        }
+      } catch (e) {
+        console.error('Failed to parse puzzle data');
+      }
+    }
+  }, []);
+
+  // Initialize game when puzzle data is loaded
+  useEffect(() => {
+    if (puzzleData && mode === 'play') {
+      const { words, gridSize, allowDiagonal, allowReverse } = puzzleData;
+      const { grid: newGrid, placements: newPlacements } = generateWordSearchGrid(
+        words, gridSize, allowDiagonal, allowReverse
+      );
+      setGrid(newGrid);
+      setPlacements(newPlacements);
+      setFoundWords([]);
+      setTimer(0);
+      setIsTimerRunning(true);
+      setShowSuccess(false);
+    }
+  }, [puzzleData, mode]);
+
+  // Timer
+  useEffect(() => {
+    let interval;
+    if (isTimerRunning) {
+      interval = setInterval(() => {
+        setTimer(t => t + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isTimerRunning]);
+
+  // Check for win condition
+  useEffect(() => {
+    if (placements.length > 0 && foundWords.length === placements.length) {
+      setIsTimerRunning(false);
+      setTimeout(() => setShowSuccess(true), 500);
+    }
+  }, [foundWords, placements]);
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const generatePuzzle = () => {
+    const words = wordsInput
+      .split(/[,\n]/)
+      .map(w => w.trim())
+      .filter(w => w.length > 0 && /^[a-zA-Z가-힣]+$/.test(w))
+      .slice(0, 15);
+
+    if (words.length === 0) {
+      alert('유효한 단어를 입력해주세요!');
+      return;
+    }
+
+    const gridSize = difficulty === 'easy' ? 10 : 15;
+    const allowDiagonal = difficulty === 'hard';
+    const allowReverse = difficulty === 'hard';
+
+    const data = {
+      title: title || '단어 찾기 퍼즐',
+      words,
+      gridSize,
+      allowDiagonal,
+      allowReverse
+    };
+
+    const encoded = encodeData(data);
+    setPuzzleCode(encoded);
+    
+    // 기본 URL이 설정되어 있으면 전체 URL도 생성
+    if (baseUrl) {
+      const cleanBaseUrl = baseUrl.trim().replace(/\/$/, '');
+      setGeneratedUrl(`${cleanBaseUrl}?puzzle=${encoded}`);
+    } else {
+      setGeneratedUrl('');
+    }
+  };
+
+  const updateFullUrl = (newBaseUrl) => {
+    setBaseUrl(newBaseUrl);
+    if (puzzleCode && newBaseUrl) {
+      const cleanBaseUrl = newBaseUrl.trim().replace(/\/$/, '');
+      setGeneratedUrl(`${cleanBaseUrl}?puzzle=${puzzleCode}`);
+    } else {
+      setGeneratedUrl('');
+    }
+  };
+
+  const copyUrl = () => {
+    navigator.clipboard.writeText(generatedUrl);
+    alert('링크가 복사되었습니다!');
+  };
+
+  const getCellsInLine = (start, end) => {
+    if (!start || !end) return [];
+    
+    const dx = Math.sign(end.x - start.x);
+    const dy = Math.sign(end.y - start.y);
+    
+    // Only allow straight lines (horizontal, vertical, diagonal)
+    if (dx !== 0 && dy !== 0 && Math.abs(end.x - start.x) !== Math.abs(end.y - start.y)) {
+      return [start];
+    }
+    
+    const cells = [];
+    let x = start.x;
+    let y = start.y;
+    
+    while (true) {
+      cells.push({ x, y });
+      if (x === end.x && y === end.y) break;
+      x += dx;
+      y += dy;
+      if (cells.length > 20) break; // Safety limit
+    }
+    
+    return cells;
+  };
+
+  const handleCellMouseDown = (x, y) => {
+    setSelecting(true);
+    setStartCell({ x, y });
+    setSelectedCells([{ x, y }]);
+    setWrongSelection(false);
+  };
+
+  const handleCellMouseEnter = (x, y) => {
+    if (selecting && startCell) {
+      const cells = getCellsInLine(startCell, { x, y });
+      setSelectedCells(cells);
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (selecting && selectedCells.length > 1) {
+      // Check if selection matches any word
+      const selectedWord = selectedCells.map(c => grid[c.y][c.x]).join('');
+      const reversedWord = selectedWord.split('').reverse().join('');
+      
+      const matchedPlacement = placements.find(p => {
+        const placementWord = p.word;
+        return (selectedWord === placementWord || reversedWord === placementWord) &&
+          !foundWords.includes(p.word);
+      });
+
+      if (matchedPlacement) {
+        setFoundWords([...foundWords, matchedPlacement.word]);
+        // Play success sound effect (visual feedback)
+      } else {
+        setWrongSelection(true);
+        setTimeout(() => setWrongSelection(false), 300);
+      }
+    }
+    setSelecting(false);
+    setSelectedCells([]);
+    setStartCell(null);
+  };
+
+  const isCellSelected = (x, y) => {
+    return selectedCells.some(c => c.x === x && c.y === y);
+  };
+
+  const isCellFound = (x, y) => {
+    return placements.some(p => 
+      foundWords.includes(p.word) && 
+      p.cells.some(c => c.x === x && c.y === y)
+    );
+  };
+
+  const getFoundColor = (x, y) => {
+    const colors = ['#FFD93D', '#6BCB77', '#4D96FF', '#FF6B6B', '#C9B1FF', '#FF9F45', '#45FFC8'];
+    for (let i = 0; i < placements.length; i++) {
+      const p = placements[i];
+      if (foundWords.includes(p.word) && p.cells.some(c => c.x === x && c.y === y)) {
+        return colors[foundWords.indexOf(p.word) % colors.length];
+      }
+    }
+    return null;
+  };
+
+  const resetGame = () => {
+    if (puzzleData) {
+      const { words, gridSize, allowDiagonal, allowReverse } = puzzleData;
+      const { grid: newGrid, placements: newPlacements } = generateWordSearchGrid(
+        words, gridSize, allowDiagonal, allowReverse
+      );
+      setGrid(newGrid);
+      setPlacements(newPlacements);
+      setFoundWords([]);
+      setTimer(0);
+      setIsTimerRunning(true);
+      setShowSuccess(false);
+    }
+  };
+
+  // Home Screen
+  if (mode === 'home') {
+    return (
+      <div className="app-container">
+        <style>{styles}</style>
+        <div className="home-screen">
+          <div className="logo-container">
+            <div className="logo-icon">🔍</div>
+            <h1 className="main-title">Edu-Puzzle Maker</h1>
+            <p className="subtitle">재미있는 단어 찾기 퍼즐을 만들어보세요!</p>
+          </div>
+          
+          <div className="home-buttons">
+            <button className="home-btn create-btn" onClick={() => setMode('create')}>
+              <span className="btn-icon">✏️</span>
+              <span className="btn-text">퍼즐 만들기</span>
+              <span className="btn-desc">선생님용</span>
+            </button>
+          </div>
+          
+          <div className="home-features">
+            <div className="feature">
+              <span className="feature-icon">📚</span>
+              <span>교과서 단어로 퍼즐 생성</span>
+            </div>
+            <div className="feature">
+              <span className="feature-icon">🔗</span>
+              <span>링크 하나로 간편 공유</span>
+            </div>
+            <div className="feature">
+              <span className="feature-icon">📱</span>
+              <span>PC, 태블릿 모두 지원</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Create Mode
+  if (mode === 'create') {
+    return (
+      <div className="app-container">
+        <style>{styles}</style>
+        <div className="create-screen">
+          <button className="back-btn" onClick={() => setMode('home')}>
+            ← 홈으로
+          </button>
+          
+          <h2 className="screen-title">🎯 퍼즐 만들기</h2>
+          
+          <div className="form-group">
+            <label>퍼즐 제목</label>
+            <input
+              type="text"
+              placeholder="예: 3단원 필수 영단어"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="text-input"
+            />
+          </div>
+          
+          <div className="form-group">
+            <label>찾을 단어 (쉼표 또는 줄바꿈으로 구분, 최대 15개)</label>
+            <textarea
+              placeholder="apple, banana, cat&#10;또는&#10;사과&#10;바나나&#10;고양이"
+              value={wordsInput}
+              onChange={(e) => setWordsInput(e.target.value)}
+              className="words-input"
+              rows={6}
+            />
+          </div>
+          
+          <div className="form-group">
+            <label>난이도</label>
+            <div className="difficulty-selector">
+              <button
+                className={`diff-btn ${difficulty === 'easy' ? 'active' : ''}`}
+                onClick={() => setDifficulty('easy')}
+              >
+                <span className="diff-icon">😊</span>
+                <span className="diff-name">쉬움</span>
+                <span className="diff-desc">10×10, 가로/세로만</span>
+              </button>
+              <button
+                className={`diff-btn ${difficulty === 'hard' ? 'active' : ''}`}
+                onClick={() => setDifficulty('hard')}
+              >
+                <span className="diff-icon">🔥</span>
+                <span className="diff-name">어려움</span>
+                <span className="diff-desc">15×15, 대각선+역방향</span>
+              </button>
+            </div>
+          </div>
+          
+          <button className="generate-btn" onClick={generatePuzzle}>
+            ✨ 퍼즐 생성하기
+          </button>
+          
+          {puzzleCode && (
+            <div className="url-result">
+              <h3>🎉 퍼즐이 생성되었습니다!</h3>
+              
+              <div className="result-section">
+                <label>1. 배포된 사이트 주소 입력</label>
+                <input
+                  type="text"
+                  placeholder="예: https://username.github.io/puzzle"
+                  value={baseUrl}
+                  onChange={(e) => updateFullUrl(e.target.value)}
+                  className="text-input"
+                />
+                <p className="helper-text">
+                  💡 GitHub Pages, Vercel 등에 배포 후 해당 주소를 입력하세요
+                </p>
+              </div>
+              
+              {generatedUrl && (
+                <div className="result-section">
+                  <label>2. 학생 배포용 링크</label>
+                  <div className="url-box">
+                    <input type="text" value={generatedUrl} readOnly className="url-input" />
+                    <button className="copy-btn" onClick={copyUrl}>복사</button>
+                  </div>
+                </div>
+              )}
+              
+              <div className="result-section">
+                <label>퍼즐 코드 (고급)</label>
+                <div className="url-box">
+                  <input 
+                    type="text" 
+                    value={`?puzzle=${puzzleCode}`} 
+                    readOnly 
+                    className="url-input code-input" 
+                  />
+                  <button 
+                    className="copy-btn"
+                    onClick={() => {
+                      navigator.clipboard.writeText(`?puzzle=${puzzleCode}`);
+                      alert('퍼즐 코드가 복사되었습니다!');
+                    }}
+                  >
+                    복사
+                  </button>
+                </div>
+                <p className="helper-text">
+                  배포된 사이트 주소 뒤에 이 코드를 붙여서 사용할 수 있습니다
+                </p>
+              </div>
+              
+              <div className="action-buttons">
+                <button 
+                  className="preview-btn"
+                  onClick={() => {
+                    const decoded = decodeData(puzzleCode);
+                    setPuzzleData(decoded);
+                    setMode('play');
+                  }}
+                >
+                  👀 미리보기
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Play Mode
+  if (mode === 'play' && grid.length > 0) {
+    const wordsToFind = placements.map(p => p.word);
+    const gridSize = grid.length;
+    
+    return (
+      <div className="app-container">
+        <style>{styles}</style>
+        <Confetti active={showSuccess} />
+        
+        {showSuccess && (
+          <div className="success-overlay">
+            <div className="success-modal">
+              <div className="success-icon">🎉</div>
+              <h2>축하합니다!</h2>
+              <p>모든 단어를 찾았어요!</p>
+              <p className="final-time">완료 시간: {formatTime(timer)}</p>
+              <div className="success-buttons">
+                <button className="play-again-btn" onClick={resetGame}>
+                  🔄 다시 하기
+                </button>
+                <button className="home-btn-small" onClick={() => {
+                  window.history.pushState({}, '', window.location.pathname);
+                  setMode('home');
+                  setPuzzleData(null);
+                }}>
+                  🏠 홈으로
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        <div className="play-screen">
+          <div className="play-header">
+            <h2 className="puzzle-title">{puzzleData?.title || '단어 찾기'}</h2>
+            <div className="timer">⏱️ {formatTime(timer)}</div>
+          </div>
+          
+          <div className="progress-bar">
+            <div 
+              className="progress-fill"
+              style={{ width: `${(foundWords.length / wordsToFind.length) * 100}%` }}
+            />
+            <span className="progress-text">
+              {foundWords.length} / {wordsToFind.length}
+            </span>
+          </div>
+          
+          <div className="grid-wrapper">
+            <div 
+              className={`grid-container ${wrongSelection ? 'shake' : ''} size-${gridSize}`}
+              style={{ 
+                gridTemplateColumns: `repeat(${gridSize}, 1fr)`
+              }}
+              ref={gridRef}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              onTouchEnd={handleMouseUp}
+            >
+            {grid.map((row, y) =>
+              row.map((cell, x) => {
+                const foundColor = getFoundColor(x, y);
+                return (
+                  <div
+                    key={`${x}-${y}`}
+                    className={`grid-cell ${isCellSelected(x, y) ? 'selected' : ''} ${foundColor ? 'found' : ''}`}
+                    style={foundColor ? { backgroundColor: foundColor } : {}}
+                    onMouseDown={() => handleCellMouseDown(x, y)}
+                    onMouseEnter={() => handleCellMouseEnter(x, y)}
+                    onTouchStart={(e) => {
+                      e.preventDefault();
+                      handleCellMouseDown(x, y);
+                    }}
+                    onTouchMove={(e) => {
+                      e.preventDefault();
+                      const touch = e.touches[0];
+                      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                      if (element && element.dataset.x !== undefined) {
+                        handleCellMouseEnter(parseInt(element.dataset.x), parseInt(element.dataset.y));
+                      }
+                    }}
+                    data-x={x}
+                    data-y={y}
+                  >
+                    {cell}
+                  </div>
+                );
+              })
+            )}
+          </div>
+          </div>
+          
+          <div className="word-list">
+            <h3>찾아야 할 단어</h3>
+            <div className="words">
+              {wordsToFind.map((word, i) => (
+                <span 
+                  key={i} 
+                  className={`word-item ${foundWords.includes(word) ? 'found' : ''}`}
+                >
+                  {word}
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          <button className="reset-btn" onClick={resetGame}>
+            🔄 새로운 배치로 다시 시작
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="app-container">
+      <style>{styles}</style>
+      <div className="loading">로딩 중...</div>
+    </div>
+  );
+}
+
+const styles = `
+@import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  font-family: 'Noto Sans KR', sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.app-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255,255,255,0.1) 0%, transparent 30%);
+  pointer-events: none;
+}
+
+/* Home Screen */
+.home-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.logo-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.main-title {
+  font-family: 'Jua', sans-serif;
+  font-size: 3.5rem;
+  color: #fff;
+  text-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.3rem;
+  color: rgba(255,255,255,0.9);
+}
+
+.home-buttons {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.home-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 3rem;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.create-btn {
+  background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 100%);
+}
+
+.home-btn:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.btn-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.btn-text {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.btn-desc {
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.6);
+  margin-top: 0.3rem;
+}
+
+.home-features {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  padding: 1rem 1.5rem;
+  border-radius: 50px;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.feature-icon {
+  font-size: 1.3rem;
+}
+
+/* Create Screen */
+.create-screen {
+  min-height: 100vh;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.back-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.screen-title {
+  font-family: 'Jua', sans-serif;
+  font-size: 2.5rem;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.text-input, .words-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-radius: 16px;
+  font-size: 1.1rem;
+  background: rgba(255,255,255,0.95);
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.text-input:focus, .words-input:focus {
+  outline: none;
+  border-color: #FFD93D;
+  box-shadow: 0 0 20px rgba(255,217,61,0.4);
+}
+
+.words-input {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.difficulty-selector {
+  display: flex;
+  gap: 1rem;
+}
+
+.diff-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.diff-btn.active {
+  background: rgba(255,255,255,0.95);
+  border-color: #FFD93D;
+}
+
+.diff-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.diff-name {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.diff-desc {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.3rem;
+}
+
+.diff-btn:not(.active) .diff-name,
+.diff-btn:not(.active) .diff-desc {
+  color: rgba(255,255,255,0.9);
+}
+
+.generate-btn {
+  width: 100%;
+  padding: 1.2rem;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 100%);
+  color: #333;
+  font-family: 'Jua', sans-serif;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.generate-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.url-result {
+  margin-top: 2rem;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.url-result h3 {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.result-section {
+  text-align: left;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.result-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 1rem;
+}
+
+.result-section label {
+  display: block;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.result-section .text-input {
+  margin-bottom: 0.5rem;
+}
+
+.helper-text {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.url-box {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.url-input {
+  flex: 1;
+  padding: 0.8rem;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.url-input.code-input {
+  font-family: monospace;
+  font-size: 0.8rem;
+  background: #f5f5f5;
+}
+
+.copy-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  background: #667eea;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.copy-btn:hover {
+  background: #5a6fd6;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.preview-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6BCB77 0%, #4D96FF 100%);
+  color: #fff;
+  font-family: 'Jua', sans-serif;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.preview-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Play Screen */
+.play-screen {
+  min-height: 100vh;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.play-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 1rem;
+}
+
+.puzzle-title {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.8rem;
+  color: #fff;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+.timer {
+  background: rgba(255,255,255,0.95);
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-family: 'Jua', sans-serif;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.progress-bar {
+  width: 100%;
+  max-width: 500px;
+  height: 30px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 15px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6BCB77, #FFD93D);
+  border-radius: 15px;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+  color: #333;
+  text-shadow: 0 0 10px rgba(255,255,255,0.8);
+}
+
+.grid-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+}
+
+.grid-container {
+  display: grid;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 10px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  user-select: none;
+  touch-action: none;
+  gap: 3px;
+  aspect-ratio: 1;
+}
+
+.grid-container.size-10 {
+  width: min(90vw, 450px);
+}
+
+.grid-container.size-15 {
+  width: min(95vw, 550px);
+  gap: 2px;
+  padding: 8px;
+}
+
+.grid-container.shake {
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.grid-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.95);
+  border-radius: 4px;
+  font-family: 'Jua', sans-serif;
+  font-weight: 700;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  min-width: 0;
+  min-height: 0;
+}
+
+.grid-container.size-10 .grid-cell {
+  font-size: clamp(1rem, 4vw, 1.5rem);
+}
+
+.grid-container.size-15 .grid-cell {
+  font-size: clamp(0.7rem, 2.2vw, 1rem);
+  border-radius: 3px;
+}
+
+.grid-cell:hover {
+  background: rgba(255,255,255,1);
+  transform: scale(1.02);
+}
+
+.grid-cell.selected {
+  background: linear-gradient(135deg, #4D96FF 0%, #3a7bd5 100%);
+  color: #fff;
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(77,150,255,0.5);
+  z-index: 1;
+}
+
+.grid-cell.found {
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.word-list {
+  margin-top: 1.5rem;
+  background: rgba(255,255,255,0.95);
+  padding: 1.5rem;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.word-list h3 {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.3rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: center;
+}
+
+.word-item {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-family: 'Jua', sans-serif;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.word-item.found {
+  background: #6BCB77;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.reset-btn {
+  margin-top: 1.5rem;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  font-family: 'Jua', sans-serif;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Success Overlay */
+.success-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.success-modal {
+  background: #fff;
+  padding: 3rem;
+  border-radius: 30px;
+  text-align: center;
+  animation: popIn 0.5s ease;
+  max-width: 90%;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.success-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+}
+
+.success-modal h2 {
+  font-family: 'Jua', sans-serif;
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.success-modal p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.final-time {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.5rem !important;
+  color: #667eea !important;
+  margin: 1rem 0;
+}
+
+.success-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.play-again-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #6BCB77 0%, #4D96FF 100%);
+  color: #fff;
+  font-family: 'Jua', sans-serif;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.home-btn-small {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FFD93D 100%);
+  color: #333;
+  font-family: 'Jua', sans-serif;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.play-again-btn:hover, .home-btn-small:hover {
+  transform: translateY(-3px);
+}
+
+/* Confetti */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -20px;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .main-title {
+    font-size: 2.5rem;
+  }
+  
+  .home-buttons {
+    flex-direction: column;
+  }
+  
+  .home-btn {
+    padding: 1.5rem 2rem;
+  }
+  
+  .home-features {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .difficulty-selector {
+    flex-direction: column;
+  }
+  
+  .grid-wrapper {
+    padding: 0 0.5rem;
+  }
+  
+  .grid-container {
+    padding: 6px;
+    gap: 2px;
+  }
+  
+  .grid-container.size-15 {
+    gap: 1.5px;
+    padding: 5px;
+  }
+  
+  .grid-container.size-10 .grid-cell {
+    font-size: clamp(0.9rem, 3.5vw, 1.3rem);
+  }
+  
+  .grid-container.size-15 .grid-cell {
+    font-size: clamp(0.6rem, 2vw, 0.85rem);
+  }
+  
+  .play-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  
+  .puzzle-title {
+    font-size: 1.5rem;
+  }
+  
+  .success-modal {
+    padding: 2rem;
+  }
+  
+  .success-buttons {
+    flex-direction: column;
+  }
+}
+`;
