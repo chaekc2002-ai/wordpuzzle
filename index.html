@@ -133,6 +133,124 @@
       box-shadow: 0 0 20px rgba(255,217,61,0.4);
     }
     .words-input { resize: vertical; min-height: 200px; }
+    .input-instructions {
+      background: rgba(255,255,255,0.15);
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+    .input-instructions p {
+      margin-bottom: 0.3rem;
+      font-size: 0.95rem;
+    }
+    .key-hint {
+      background: rgba(255,255,255,0.3);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.85rem;
+    }
+    .word-pairs-container {
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .word-pair-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.8rem;
+      padding: 0.5rem;
+      background: #f8f9fa;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+    .word-pair-row:hover {
+      background: #f0f0f0;
+    }
+    .word-pair-row:last-child {
+      margin-bottom: 0;
+    }
+    .pair-number {
+      font-family: 'Jua', sans-serif;
+      font-size: 1rem;
+      color: #667eea;
+      min-width: 24px;
+      text-align: center;
+    }
+    .word-input {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: all 0.2s ease;
+    }
+    .word-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
+    }
+    .english-input {
+      background: #fff;
+    }
+    .korean-input {
+      background: #fffbeb;
+    }
+    .arrow-divider {
+      color: #667eea;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .remove-pair-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: #ff6b6b;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .remove-pair-btn:hover:not(:disabled) {
+      background: #ee5a5a;
+      transform: scale(1.1);
+    }
+    .remove-pair-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .add-pair-btn {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px dashed #667eea;
+      border-radius: 10px;
+      background: rgba(102,126,234,0.1);
+      color: #667eea;
+      font-family: 'Jua', sans-serif;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .add-pair-btn:hover {
+      background: rgba(102,126,234,0.2);
+      border-style: solid;
+    }
+    .word-count {
+      text-align: right;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
     .input-hint { color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-top: 0.5rem; }
     .difficulty-selector { display: flex; gap: 1rem; }
     .diff-btn {
@@ -477,6 +595,47 @@
     }
     .status-badge.complete { background: #6BCB77; color: #fff; }
     .status-badge.incomplete { background: #FFD93D; color: #333; }
+    .teacher-controls {
+      width: 100%;
+      max-width: 550px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.95);
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .teacher-badge {
+      font-family: 'Jua', sans-serif;
+      font-size: 1rem;
+      color: #667eea;
+      background: #f0f0ff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+    }
+    .answer-toggle-btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      font-family: 'Jua', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .answer-toggle-btn:hover {
+      transform: scale(1.05);
+    }
+    .answer-toggle-btn.active {
+      background: linear-gradient(135deg, #6BCB77 0%, #4D96FF 100%);
+    }
+    .matching-row.show-answer {
+      background: #f0f8ff;
+      border: 2px dashed #667eea;
+    }
     .confetti-container {
       position: fixed;
       top: 0; left: 0;
@@ -525,6 +684,10 @@
       .matching-row { flex-direction: column; gap: 0.5rem; }
       .english-word, .meaning-select { width: 100%; flex: none; }
       .arrow-icon { transform: rotate(90deg); }
+      .teacher-controls { flex-direction: column; gap: 0.5rem; text-align: center; }
+      .word-pair-row { flex-wrap: wrap; }
+      .word-input { min-width: 100px; }
+      .arrow-divider { display: none; }
     }
   </style>
 </head>
@@ -639,6 +802,7 @@
       const [generatedUrl, setGeneratedUrl] = useState('');
       const [baseUrl, setBaseUrl] = useState('');
       const [puzzleCode, setPuzzleCode] = useState('');
+      const [wordPairs, setWordPairs] = useState([{ english: '', korean: '' }]);
       const [grid, setGrid] = useState([]);
       const [placements, setPlacements] = useState([]);
       const [foundWords, setFoundWords] = useState([]);
@@ -653,6 +817,8 @@
       const [showResult, setShowResult] = useState(false);
       const [resultData, setResultData] = useState(null);
       const [checkedAnswers, setCheckedAnswers] = useState({});
+      const [isPreviewMode, setIsPreviewMode] = useState(false);
+      const [showAnswers, setShowAnswers] = useState(false);
       const gridRef = useRef(null);
 
       useEffect(() => {
@@ -660,15 +826,26 @@
         const data = params.get('puzzle');
         if (data) {
           const decoded = decodeData(data);
-          if (decoded) { setPuzzleData(decoded); setMode('play'); }
+          if (decoded) { setPuzzleData(decoded); setMode('play'); setIsPreviewMode(false); }
         }
         setBaseUrl(window.location.origin + window.location.pathname);
       }, []);
 
       useEffect(() => {
         if (puzzleData && mode === 'play') {
-          const { words, gridSize, allowDiagonal, allowReverse } = puzzleData;
-          const { grid: g, placements: p } = generateWordSearchGrid(words, gridSize, allowDiagonal, allowReverse);
+          const { words, gridSize, allowDiagonal, allowReverse, savedGrid, savedPlacements } = puzzleData;
+          
+          // 저장된 그리드가 있으면 사용, 없으면 새로 생성 (이전 버전 호환)
+          let g, p;
+          if (savedGrid && savedPlacements) {
+            g = savedGrid;
+            p = savedPlacements;
+          } else {
+            const result = generateWordSearchGrid(words, gridSize, allowDiagonal, allowReverse);
+            g = result.grid;
+            p = result.placements;
+          }
+          
           setGrid(g); setPlacements(p); setFoundWords([]); setTimer(0);
           setIsTimerRunning(true); setMatchingAnswers({}); setCheckedAnswers({});
           setShowResult(false); setShuffledMeanings(shuffleArray(words.map(w => w.korean)));
@@ -684,18 +861,87 @@
       const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
       const generatePuzzle = () => {
-        const words = wordsInput.split('\n').filter(l => l.trim()).map(line => {
-          const parts = line.split(/[,:]/).map(p => p.trim());
-          if (parts.length >= 2 && /^[a-zA-Z]+$/.test(parts[0]) && parts[1])
-            return { english: parts[0], korean: parts[1] };
-          return null;
-        }).filter(Boolean).slice(0, 15);
-        if (words.length === 0) { alert('유효한 단어를 입력해주세요!\n형식: 영어단어, 한글뜻'); return; }
+        const words = wordPairs
+          .filter(pair => pair.english.trim() && pair.korean.trim())
+          .filter(pair => /^[a-zA-Z]+$/.test(pair.english.trim()))
+          .map(pair => ({ english: pair.english.trim(), korean: pair.korean.trim() }))
+          .slice(0, 15);
+        
+        if (words.length === 0) { alert('유효한 단어를 입력해주세요!\n영어 단어는 알파벳만 입력 가능합니다.'); return; }
         const gridSize = difficulty === 'easy' ? 10 : 15;
-        const data = { title: title || '영어 단어 학습', words, gridSize, allowDiagonal: difficulty === 'hard', allowReverse: difficulty === 'hard' };
+        const allowDiagonal = difficulty === 'hard';
+        const allowReverse = difficulty === 'hard';
+        
+        const { grid: generatedGrid, placements: generatedPlacements } = generateWordSearchGrid(words, gridSize, allowDiagonal, allowReverse);
+        
+        const data = { 
+          title: title || '영어 단어 학습', 
+          words, 
+          gridSize, 
+          allowDiagonal, 
+          allowReverse,
+          savedGrid: generatedGrid,
+          savedPlacements: generatedPlacements
+        };
         const encoded = encodeData(data);
         setPuzzleCode(encoded);
         if (baseUrl) setGeneratedUrl(`${baseUrl.replace(/\/$/, '')}?puzzle=${encoded}`);
+      };
+      
+      const updateWordPair = (index, field, value) => {
+        const newPairs = [...wordPairs];
+        newPairs[index][field] = value;
+        setWordPairs(newPairs);
+      };
+      
+      const addWordPair = () => {
+        if (wordPairs.length < 15) {
+          setWordPairs([...wordPairs, { english: '', korean: '' }]);
+        }
+      };
+      
+      const removeWordPair = (index) => {
+        if (wordPairs.length > 1) {
+          const newPairs = wordPairs.filter((_, i) => i !== index);
+          setWordPairs(newPairs);
+        }
+      };
+      
+      const handleKeyDown = (e, index, field) => {
+        if (e.key === ' ' && field === 'english') {
+          e.preventDefault();
+          const koreanInput = document.getElementById(`korean-${index}`);
+          if (koreanInput) koreanInput.focus();
+        } else if (e.key === ' ' && field === 'korean' && e.target.value.trim()) {
+          e.preventDefault();
+          if (index === wordPairs.length - 1 && wordPairs.length < 15) {
+            addWordPair();
+            setTimeout(() => {
+              const nextEnglish = document.getElementById(`english-${index + 1}`);
+              if (nextEnglish) nextEnglish.focus();
+            }, 50);
+          } else if (index < wordPairs.length - 1) {
+            const nextEnglish = document.getElementById(`english-${index + 1}`);
+            if (nextEnglish) nextEnglish.focus();
+          }
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (field === 'english') {
+            const koreanInput = document.getElementById(`korean-${index}`);
+            if (koreanInput) koreanInput.focus();
+          } else if (field === 'korean') {
+            if (index === wordPairs.length - 1 && wordPairs.length < 15) {
+              addWordPair();
+              setTimeout(() => {
+                const nextEnglish = document.getElementById(`english-${index + 1}`);
+                if (nextEnglish) nextEnglish.focus();
+              }, 50);
+            } else if (index < wordPairs.length - 1) {
+              const nextEnglish = document.getElementById(`english-${index + 1}`);
+              if (nextEnglish) nextEnglish.focus();
+            }
+          }
+        }
       };
 
       const copyUrl = () => { navigator.clipboard.writeText(generatedUrl); alert('링크가 복사되었습니다!'); };
@@ -724,8 +970,22 @@
       };
 
       const isCellSelected = (x, y) => selectedCells.some(c => c.x === x && c.y === y);
+      
       const getFoundColor = (x, y) => {
         const colors = ['#FFD93D', '#6BCB77', '#4D96FF', '#FF6B6B', '#C9B1FF', '#FF9F45', '#45FFC8'];
+        
+        // 정답 보기 모드일 때 모든 단어 위치 표시
+        if (showAnswers) {
+          for (let i = 0; i < placements.length; i++) {
+            const p = placements[i];
+            if (p.cells.some(c => c.x === x && c.y === y)) {
+              return colors[i % colors.length];
+            }
+          }
+          return null;
+        }
+        
+        // 일반 모드: 찾은 단어만 표시
         for (let i = 0; i < placements.length; i++) {
           const p = placements[i];
           if (foundWords.includes(p.word) && p.cells.some(c => c.x === x && c.y === y))
@@ -771,9 +1031,20 @@
 
       const resetGame = () => {
         if (!puzzleData) return;
-        const { words, gridSize, allowDiagonal, allowReverse } = puzzleData;
-        const { grid: g, placements: p } = generateWordSearchGrid(words, gridSize, allowDiagonal, allowReverse);
-        setGrid(g); setPlacements(p); setFoundWords([]); setTimer(0);
+        const { words, savedGrid, savedPlacements } = puzzleData;
+        
+        // 저장된 그리드 재사용 (동일한 배치 유지)
+        if (savedGrid && savedPlacements) {
+          setGrid(savedGrid); 
+          setPlacements(savedPlacements);
+        } else {
+          // 이전 버전 호환: 저장된 그리드가 없으면 새로 생성
+          const { gridSize, allowDiagonal, allowReverse } = puzzleData;
+          const { grid: g, placements: p } = generateWordSearchGrid(words, gridSize, allowDiagonal, allowReverse);
+          setGrid(g); setPlacements(p);
+        }
+        
+        setFoundWords([]); setTimer(0);
         setIsTimerRunning(true); setMatchingAnswers({}); setCheckedAnswers({});
         setShowResult(false); setShuffledMeanings(shuffleArray(words.map(w => w.korean)));
       };
@@ -817,9 +1088,50 @@
                 <input type="text" placeholder="예: 3단원 필수 영단어" value={title} onChange={(e) => setTitle(e.target.value)} className="text-input" />
               </div>
               <div className="form-group">
-                <label>단어 입력 (영어단어, 한글뜻) - 최대 15개</label>
-                <textarea placeholder={"apple, 사과\nbanana, 바나나\ncat, 고양이"} value={wordsInput} onChange={(e) => setWordsInput(e.target.value)} className="words-input" rows={8} />
-                <p className="input-hint">💡 한 줄에 하나씩, 쉼표로 영어와 한글을 구분</p>
+                <label>단어 입력 (최대 15개)</label>
+                <div className="input-instructions">
+                  <p>💡 <strong>입력 방법:</strong></p>
+                  <p>• 영어 단어 입력 → <span className="key-hint">스페이스바</span> 또는 <span className="key-hint">Enter</span> → 한글 뜻 입력</p>
+                  <p>• 한글 뜻 입력 후 <span className="key-hint">스페이스바</span> 또는 <span className="key-hint">Enter</span> → 다음 단어로 이동</p>
+                </div>
+                <div className="word-pairs-container">
+                  {wordPairs.map((pair, index) => (
+                    <div key={index} className="word-pair-row">
+                      <span className="pair-number">{index + 1}</span>
+                      <input
+                        id={`english-${index}`}
+                        type="text"
+                        placeholder="영어 단어"
+                        value={pair.english}
+                        onChange={(e) => updateWordPair(index, 'english', e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, index, 'english')}
+                        className="word-input english-input"
+                      />
+                      <span className="arrow-divider">→</span>
+                      <input
+                        id={`korean-${index}`}
+                        type="text"
+                        placeholder="한글 뜻"
+                        value={pair.korean}
+                        onChange={(e) => updateWordPair(index, 'korean', e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, index, 'korean')}
+                        className="word-input korean-input"
+                      />
+                      <button 
+                        className="remove-pair-btn"
+                        onClick={() => removeWordPair(index)}
+                        disabled={wordPairs.length === 1}
+                        title="삭제"
+                      >✕</button>
+                    </div>
+                  ))}
+                </div>
+                {wordPairs.length < 15 && (
+                  <button className="add-pair-btn" onClick={addWordPair}>
+                    + 단어 추가
+                  </button>
+                )}
+                <p className="word-count">{wordPairs.filter(p => p.english.trim() && p.korean.trim()).length}/15개 입력됨</p>
               </div>
               <div className="form-group">
                 <label>난이도</label>
@@ -844,7 +1156,7 @@
                     </div>
                   </div>
                   <div className="action-buttons">
-                    <button className="preview-btn" onClick={() => { setPuzzleData(decodeData(puzzleCode)); setMode('play'); }}>👀 미리보기</button>
+                    <button className="preview-btn" onClick={() => { setPuzzleData(decodeData(puzzleCode)); setMode('play'); setIsPreviewMode(true); setShowAnswers(false); }}>👀 미리보기</button>
                   </div>
                 </div>
               )}
@@ -888,7 +1200,7 @@
                   <div className="result-buttons">
                     {!resultData.isPerfect && <button className="retry-btn" onClick={retryWrong}>🔄 다시 풀기</button>}
                     <button className="play-again-btn" onClick={resetGame}>🆕 새로 시작</button>
-                    <button className="home-btn-small" onClick={() => { window.history.pushState({}, '', window.location.pathname); setMode('home'); setPuzzleData(null); }}>🏠 홈으로</button>
+                    <button className="home-btn-small" onClick={() => { window.history.pushState({}, '', window.location.pathname); setMode('home'); setPuzzleData(null); setIsPreviewMode(false); setShowAnswers(false); }}>🏠 홈으로</button>
                   </div>
                 </div>
               </div>
@@ -898,6 +1210,15 @@
                 <h2 className="puzzle-title">{puzzleData?.title || '영어 단어 학습'}</h2>
                 <div className="timer">⏱️ {formatTime(timer)}</div>
               </div>
+              
+              {isPreviewMode && (
+                <div className="teacher-controls">
+                  <span className="teacher-badge">👩‍🏫 교사 미리보기</span>
+                  <button className={`answer-toggle-btn ${showAnswers ? 'active' : ''}`} onClick={() => setShowAnswers(!showAnswers)}>
+                    {showAnswers ? '🙈 정답 숨기기' : '👁️ 정답 보기'}
+                  </button>
+                </div>
+              )}
               <div className="section-box" style={{marginTop: 0, marginBottom: '1rem'}}>
                 <h3>🔍 단어 찾기 <span className={`status-badge ${wsComplete ? 'complete' : 'incomplete'}`}>{wsComplete ? '완료!' : `${foundWords.length}/${wordsToFind.length}`}</span></h3>
               </div>
@@ -926,7 +1247,7 @@
                   const checked = checkedAnswers.hasOwnProperty(key);
                   const correct = checkedAnswers[key];
                   return (
-                    <div key={i} className={`matching-row ${checked ? (correct ? 'correct' : 'incorrect') : ''}`}>
+                    <div key={i} className={`matching-row ${checked ? (correct ? 'correct' : 'incorrect') : ''} ${showAnswers ? 'show-answer' : ''}`}>
                       <div className="english-word">{word.english}</div>
                       <span className="arrow-icon">→</span>
                       <select className={`meaning-select ${checked ? (correct ? 'correct' : 'incorrect') : ''}`} value={matchingAnswers[key] || ''} onChange={(e) => handleMatchingChange(key, e.target.value)} disabled={checked && correct}>
@@ -934,6 +1255,7 @@
                         {shuffledMeanings.map((m, j) => <option key={j} value={m}>{m}</option>)}
                       </select>
                       {checked && !correct && <div className="correct-answer">정답: {word.korean}</div>}
+                      {showAnswers && !checked && <div className="correct-answer">💡 정답: {word.korean}</div>}
                     </div>
                   );
                 })}
