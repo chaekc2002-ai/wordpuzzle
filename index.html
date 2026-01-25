@@ -11,37 +11,23 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Noto Sans KR', sans-serif; }
     .app-container {
       min-height: 100vh;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
       position: relative;
       overflow-x: hidden;
     }
-
     .app-container::before {
       content: '';
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background-image: 
         radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(255,255,255,0.1) 0%, transparent 30%);
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%);
       pointer-events: none;
     }
-
     .home-screen {
       min-height: 100vh;
       display: flex;
@@ -52,23 +38,12 @@
       position: relative;
       z-index: 1;
     }
-
-    .logo-container {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .logo-icon {
-      font-size: 5rem;
-      margin-bottom: 1rem;
-      animation: bounce 2s ease-in-out infinite;
-    }
-
+    .logo-container { text-align: center; margin-bottom: 3rem; }
+    .logo-icon { font-size: 5rem; margin-bottom: 1rem; animation: bounce 2s ease-in-out infinite; }
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-15px); }
     }
-
     .main-title {
       font-family: 'Jua', sans-serif;
       font-size: 3.5rem;
@@ -76,18 +51,8 @@
       text-shadow: 4px 4px 0 rgba(0,0,0,0.2);
       margin-bottom: 0.5rem;
     }
-
-    .subtitle {
-      font-size: 1.3rem;
-      color: rgba(255,255,255,0.9);
-    }
-
-    .home-buttons {
-      display: flex;
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
-
+    .subtitle { font-size: 1.3rem; color: rgba(255,255,255,0.9); }
+    .home-buttons { display: flex; gap: 2rem; margin-bottom: 3rem; }
     .home-btn {
       display: flex;
       flex-direction: column;
@@ -99,40 +64,12 @@
       transition: all 0.3s ease;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-
-    .create-btn {
-      background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 100%);
-    }
-
-    .home-btn:hover {
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-    }
-
-    .btn-icon {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .btn-text {
-      font-family: 'Jua', sans-serif;
-      font-size: 1.5rem;
-      color: #333;
-    }
-
-    .btn-desc {
-      font-size: 0.9rem;
-      color: rgba(0,0,0,0.6);
-      margin-top: 0.3rem;
-    }
-
-    .home-features {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
+    .create-btn { background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 100%); }
+    .home-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+    .btn-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+    .btn-text { font-family: 'Jua', sans-serif; font-size: 1.5rem; color: #333; }
+    .btn-desc { font-size: 0.9rem; color: rgba(0,0,0,0.6); margin-top: 0.3rem; }
+    .home-features { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
     .feature {
       display: flex;
       align-items: center;
@@ -144,20 +81,14 @@
       color: #fff;
       font-size: 1rem;
     }
-
-    .feature-icon {
-      font-size: 1.3rem;
-    }
-
     .create-screen {
       min-height: 100vh;
       padding: 2rem;
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto;
       position: relative;
       z-index: 1;
     }
-
     .back-btn {
       background: rgba(255,255,255,0.2);
       border: none;
@@ -169,11 +100,7 @@
       margin-bottom: 2rem;
       transition: all 0.3s ease;
     }
-
-    .back-btn:hover {
-      background: rgba(255,255,255,0.3);
-    }
-
+    .back-btn:hover { background: rgba(255,255,255,0.3); }
     .screen-title {
       font-family: 'Jua', sans-serif;
       font-size: 2.5rem;
@@ -182,11 +109,7 @@
       margin-bottom: 2rem;
       text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
     }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
+    .form-group { margin-bottom: 1.5rem; }
     .form-group label {
       display: block;
       color: #fff;
@@ -194,7 +117,6 @@
       margin-bottom: 0.5rem;
       font-size: 1.1rem;
     }
-
     .text-input, .words-input {
       width: 100%;
       padding: 1rem 1.5rem;
@@ -205,23 +127,14 @@
       font-family: 'Noto Sans KR', sans-serif;
       transition: all 0.3s ease;
     }
-
     .text-input:focus, .words-input:focus {
       outline: none;
       border-color: #FFD93D;
       box-shadow: 0 0 20px rgba(255,217,61,0.4);
     }
-
-    .words-input {
-      resize: vertical;
-      min-height: 150px;
-    }
-
-    .difficulty-selector {
-      display: flex;
-      gap: 1rem;
-    }
-
+    .words-input { resize: vertical; min-height: 200px; }
+    .input-hint { color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-top: 0.5rem; }
+    .difficulty-selector { display: flex; gap: 1rem; }
     .diff-btn {
       flex: 1;
       display: flex;
@@ -234,34 +147,11 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-
-    .diff-btn.active {
-      background: rgba(255,255,255,0.95);
-      border-color: #FFD93D;
-    }
-
-    .diff-icon {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .diff-name {
-      font-family: 'Jua', sans-serif;
-      font-size: 1.3rem;
-      color: #333;
-    }
-
-    .diff-desc {
-      font-size: 0.85rem;
-      color: #666;
-      margin-top: 0.3rem;
-    }
-
-    .diff-btn:not(.active) .diff-name,
-    .diff-btn:not(.active) .diff-desc {
-      color: rgba(255,255,255,0.9);
-    }
-
+    .diff-btn.active { background: rgba(255,255,255,0.95); border-color: #FFD93D; }
+    .diff-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .diff-name { font-family: 'Jua', sans-serif; font-size: 1.3rem; color: #333; }
+    .diff-desc { font-size: 0.85rem; color: #666; margin-top: 0.3rem; }
+    .diff-btn:not(.active) .diff-name, .diff-btn:not(.active) .diff-desc { color: rgba(255,255,255,0.9); }
     .generate-btn {
       width: 100%;
       padding: 1.2rem;
@@ -275,12 +165,7 @@
       transition: all 0.3s ease;
       box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     }
-
-    .generate-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-
+    .generate-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
     .url-result {
       margin-top: 2rem;
       background: rgba(255,255,255,0.95);
@@ -288,49 +173,25 @@
       padding: 2rem;
       text-align: center;
     }
-
     .url-result h3 {
       font-family: 'Jua', sans-serif;
       font-size: 1.5rem;
       color: #333;
       margin-bottom: 1.5rem;
     }
-
     .result-section {
       text-align: left;
       margin-bottom: 1.5rem;
       padding-bottom: 1.5rem;
       border-bottom: 1px solid #eee;
     }
-
-    .result-section:last-of-type {
-      border-bottom: none;
-      margin-bottom: 1rem;
-    }
-
     .result-section label {
       display: block;
       font-weight: 700;
       color: #333;
       margin-bottom: 0.5rem;
-      font-size: 1rem;
     }
-
-    .result-section .text-input {
-      margin-bottom: 0.5rem;
-    }
-
-    .helper-text {
-      font-size: 0.85rem;
-      color: #666;
-      margin-top: 0.5rem;
-    }
-
-    .url-box {
-      display: flex;
-      gap: 0.5rem;
-    }
-
+    .url-box { display: flex; gap: 0.5rem; }
     .url-input {
       flex: 1;
       padding: 0.8rem;
@@ -338,13 +199,6 @@
       border-radius: 10px;
       font-size: 0.9rem;
     }
-
-    .url-input.code-input {
-      font-family: monospace;
-      font-size: 0.8rem;
-      background: #f5f5f5;
-    }
-
     .copy-btn {
       padding: 0.8rem 1.5rem;
       border: none;
@@ -354,20 +208,9 @@
       font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
-      white-space: nowrap;
     }
-
-    .copy-btn:hover {
-      background: #5a6fd6;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      margin-top: 1rem;
-    }
-
+    .copy-btn:hover { background: #5a6fd6; }
+    .action-buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; }
     .preview-btn {
       padding: 1rem 2rem;
       border: none;
@@ -379,21 +222,17 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-
-    .preview-btn:hover {
-      transform: translateY(-2px);
-    }
-
+    .preview-btn:hover { transform: translateY(-2px); }
     .play-screen {
       min-height: 100vh;
       padding: 1.5rem;
+      padding-bottom: 100px;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
       z-index: 1;
     }
-
     .play-header {
       display: flex;
       justify-content: space-between;
@@ -402,14 +241,12 @@
       max-width: 550px;
       margin-bottom: 1rem;
     }
-
     .puzzle-title {
       font-family: 'Jua', sans-serif;
       font-size: 1.8rem;
       color: #fff;
       text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
     }
-
     .timer {
       background: rgba(255,255,255,0.95);
       padding: 0.6rem 1.2rem;
@@ -418,74 +255,26 @@
       font-size: 1.3rem;
       color: #333;
     }
-
-    .progress-bar {
-      width: 100%;
-      max-width: 550px;
-      height: 30px;
-      background: rgba(255,255,255,0.3);
-      border-radius: 15px;
-      margin-bottom: 1.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #6BCB77, #FFD93D);
-      border-radius: 15px;
-      transition: width 0.5s ease;
-    }
-
-    .progress-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-weight: 700;
-      color: #333;
-      text-shadow: 0 0 10px rgba(255,255,255,0.8);
-    }
-
-    .grid-wrapper {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      padding: 0 1rem;
-    }
-
+    .grid-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 1rem; }
     .grid-container {
       display: grid;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       padding: 10px;
       border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
       user-select: none;
       touch-action: none;
       gap: 3px;
       aspect-ratio: 1;
     }
-
-    .grid-container.size-10 {
-      width: min(90vw, 450px);
-    }
-
-    .grid-container.size-15 {
-      width: min(95vw, 550px);
-      gap: 2px;
-      padding: 8px;
-    }
-
-    .grid-container.shake {
-      animation: shake 0.3s ease;
-    }
-
+    .grid-container.size-10 { width: min(90vw, 450px); }
+    .grid-container.size-15 { width: min(95vw, 550px); gap: 2px; padding: 8px; }
+    .grid-container.shake { animation: shake 0.3s ease; }
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-5px); }
       75% { transform: translateX(5px); }
     }
-
     .grid-cell {
       aspect-ratio: 1;
       display: flex;
@@ -499,24 +288,10 @@
       cursor: pointer;
       transition: all 0.15s ease;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      min-width: 0;
-      min-height: 0;
     }
-
-    .grid-container.size-10 .grid-cell {
-      font-size: clamp(1rem, 4vw, 1.5rem);
-    }
-
-    .grid-container.size-15 .grid-cell {
-      font-size: clamp(0.7rem, 2.2vw, 1rem);
-      border-radius: 3px;
-    }
-
-    .grid-cell:hover {
-      background: rgba(255,255,255,1);
-      transform: scale(1.02);
-    }
-
+    .grid-container.size-10 .grid-cell { font-size: clamp(1rem, 4vw, 1.5rem); }
+    .grid-container.size-15 .grid-cell { font-size: clamp(0.7rem, 2.2vw, 1rem); border-radius: 3px; }
+    .grid-cell:hover { background: rgba(255,255,255,1); transform: scale(1.02); }
     .grid-cell.selected {
       background: linear-gradient(135deg, #4D96FF 0%, #3a7bd5 100%);
       color: #fff;
@@ -524,37 +299,28 @@
       box-shadow: 0 4px 12px rgba(77,150,255,0.5);
       z-index: 1;
     }
-
-    .grid-cell.found {
-      color: #fff;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-
-    .word-list {
+    .grid-cell.found { color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+    .section-box {
       margin-top: 1.5rem;
       background: rgba(255,255,255,0.95);
       padding: 1.5rem;
       border-radius: 20px;
       width: 100%;
       max-width: 550px;
-      text-align: center;
     }
-
-    .word-list h3 {
+    .section-box h3 {
       font-family: 'Jua', sans-serif;
       font-size: 1.3rem;
       color: #333;
       margin-bottom: 1rem;
+      text-align: center;
     }
-
     .words {
       display: flex;
       flex-wrap: wrap;
       gap: 0.8rem;
       justify-content: center;
     }
-
     .word-item {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #fff;
@@ -564,13 +330,131 @@
       font-size: 1.1rem;
       transition: all 0.3s ease;
     }
-
-    .word-item.found {
-      background: #6BCB77;
-      text-decoration: line-through;
-      opacity: 0.7;
+    .word-item.found { background: #6BCB77; text-decoration: line-through; opacity: 0.7; }
+    .matching-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      background: #f8f9fa;
+      border-radius: 12px;
+      transition: all 0.3s ease;
     }
-
+    .matching-row.correct { background: #d4edda; border: 2px solid #6BCB77; }
+    .matching-row.incorrect { background: #f8d7da; border: 2px solid #FF6B6B; }
+    .english-word {
+      flex: 1;
+      font-family: 'Jua', sans-serif;
+      font-size: 1.2rem;
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .arrow-icon { font-size: 1.5rem; color: #666; }
+    .meaning-select {
+      flex: 1.5;
+      padding: 0.8rem 1rem;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #fff;
+      cursor: pointer;
+    }
+    .meaning-select:focus { outline: none; border-color: #667eea; }
+    .meaning-select.correct { border-color: #6BCB77; background: #d4edda; }
+    .meaning-select.incorrect { border-color: #FF6B6B; background: #f8d7da; }
+    .correct-answer { font-size: 0.85rem; color: #6BCB77; margin-top: 0.3rem; font-weight: 700; width: 100%; }
+    .submit-section {
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 550px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 1.2rem;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #FF6B6B 0%, #FFD93D 100%);
+      color: #333;
+      font-family: 'Jua', sans-serif;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    }
+    .submit-btn:hover { transform: translateY(-3px); }
+    .submit-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+    .incomplete-warning {
+      color: #FFD93D;
+      font-weight: 700;
+      text-align: center;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+    .result-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+      padding: 1rem;
+    }
+    .result-content {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 30px;
+      text-align: center;
+      animation: popIn 0.5s ease;
+      max-width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      width: 400px;
+    }
+    .result-icon { font-size: 5rem; margin-bottom: 1rem; }
+    .result-content h2 { font-family: 'Jua', sans-serif; font-size: 2rem; color: #333; }
+    .result-score { font-family: 'Jua', sans-serif; font-size: 1.5rem; color: #667eea; margin: 1rem 0; }
+    .result-details {
+      text-align: left;
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+    }
+    .result-details p { margin-bottom: 0.5rem; }
+    .wrong-list { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd; }
+    .wrong-list h4 { color: #FF6B6B; margin-bottom: 0.5rem; }
+    .wrong-item {
+      background: #fff;
+      padding: 0.5rem;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      border-left: 3px solid #FF6B6B;
+    }
+    .result-buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+    .retry-btn, .play-again-btn, .home-btn-small {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Jua', sans-serif;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .retry-btn { background: linear-gradient(135deg, #FF6B6B 0%, #FFD93D 100%); color: #333; }
+    .play-again-btn { background: linear-gradient(135deg, #6BCB77 0%, #4D96FF 100%); color: #fff; }
+    .home-btn-small { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); color: #fff; }
+    .retry-btn:hover, .play-again-btn:hover, .home-btn-small:hover { transform: translateY(-3px); }
     .reset-btn {
       margin-top: 1.5rem;
       padding: 1rem 2rem;
@@ -581,136 +465,42 @@
       font-family: 'Jua', sans-serif;
       font-size: 1.1rem;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
-
-    .reset-btn:hover {
-      background: rgba(255,255,255,0.3);
+    .reset-btn:hover { background: rgba(255,255,255,0.3); }
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-left: 0.5rem;
     }
-
-    .success-overlay {
+    .status-badge.complete { background: #6BCB77; color: #fff; }
+    .status-badge.incomplete { background: #FFD93D; color: #333; }
+    .confetti-container {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      animation: fadeIn 0.3s ease;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .confetti-piece {
+      position: absolute;
+      width: 10px; height: 10px;
+      top: -20px;
+      animation: confettiFall linear forwards;
     }
-
-    .success-modal {
-      background: #fff;
-      padding: 3rem;
-      border-radius: 30px;
-      text-align: center;
-      animation: popIn 0.5s ease;
-      max-width: 90%;
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
-
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes popIn {
       0% { transform: scale(0.5); opacity: 0; }
       50% { transform: scale(1.1); }
       100% { transform: scale(1); opacity: 1; }
     }
-
-    .success-icon {
-      font-size: 5rem;
-      margin-bottom: 1rem;
-    }
-
-    .success-modal h2 {
-      font-family: 'Jua', sans-serif;
-      font-size: 2.5rem;
-      color: #333;
-      margin-bottom: 0.5rem;
-    }
-
-    .success-modal p {
-      font-size: 1.2rem;
-      color: #666;
-    }
-
-    .final-time {
-      font-family: 'Jua', sans-serif;
-      font-size: 1.5rem !important;
-      color: #667eea !important;
-      margin: 1rem 0;
-    }
-
-    .success-buttons {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      margin-top: 1.5rem;
-    }
-
-    .play-again-btn {
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 50px;
-      background: linear-gradient(135deg, #6BCB77 0%, #4D96FF 100%);
-      color: #fff;
-      font-family: 'Jua', sans-serif;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .home-btn-small {
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 50px;
-      background: linear-gradient(135deg, #FF6B6B 0%, #FFD93D 100%);
-      color: #333;
-      font-family: 'Jua', sans-serif;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .play-again-btn:hover, .home-btn-small:hover {
-      transform: translateY(-3px);
-    }
-
-    .confetti-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 999;
-      overflow: hidden;
-    }
-
-    .confetti-piece {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      top: -20px;
-      animation: confettiFall linear forwards;
-    }
-
-    @keyframes confettiFall {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-      }
-    }
-
     .loading {
       min-height: 100vh;
       display: flex;
@@ -719,78 +509,30 @@
       color: #fff;
       font-size: 1.5rem;
     }
-
     @media (max-width: 600px) {
-      .main-title {
-        font-size: 2.5rem;
-      }
-      
-      .home-buttons {
-        flex-direction: column;
-      }
-      
-      .home-btn {
-        padding: 1.5rem 2rem;
-      }
-      
-      .home-features {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .difficulty-selector {
-        flex-direction: column;
-      }
-      
-      .grid-wrapper {
-        padding: 0 0.5rem;
-      }
-      
-      .grid-container {
-        padding: 6px;
-        gap: 2px;
-      }
-      
-      .grid-container.size-15 {
-        gap: 1.5px;
-        padding: 5px;
-      }
-      
-      .grid-container.size-10 .grid-cell {
-        font-size: clamp(0.9rem, 3.5vw, 1.3rem);
-      }
-      
-      .grid-container.size-15 .grid-cell {
-        font-size: clamp(0.6rem, 2vw, 0.85rem);
-      }
-      
-      .play-header {
-        flex-direction: column;
-        gap: 0.5rem;
-        text-align: center;
-      }
-      
-      .puzzle-title {
-        font-size: 1.5rem;
-      }
-      
-      .success-modal {
-        padding: 2rem;
-      }
-      
-      .success-buttons {
-        flex-direction: column;
-      }
+      .main-title { font-size: 2.5rem; }
+      .home-buttons { flex-direction: column; }
+      .home-btn { padding: 1.5rem 2rem; }
+      .home-features { flex-direction: column; align-items: center; }
+      .difficulty-selector { flex-direction: column; }
+      .grid-container { padding: 6px; gap: 2px; }
+      .grid-container.size-10 .grid-cell { font-size: clamp(0.9rem, 3.5vw, 1.3rem); }
+      .grid-container.size-15 .grid-cell { font-size: clamp(0.6rem, 2vw, 0.85rem); }
+      .play-header { flex-direction: column; gap: 0.5rem; text-align: center; }
+      .puzzle-title { font-size: 1.5rem; }
+      .result-content { padding: 1.5rem; }
+      .result-buttons { flex-direction: column; }
+      .matching-row { flex-direction: column; gap: 0.5rem; }
+      .english-word, .meaning-select { width: 100%; flex: none; }
+      .arrow-icon { transform: rotate(90deg); }
     }
   </style>
 </head>
 <body>
   <div id="root"></div>
-  
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-    // UTF-8 safe Base64 encoding/decoding for URL sharing
     const encodeData = (data) => {
       try {
         const jsonStr = JSON.stringify(data);
@@ -798,141 +540,96 @@
         const binaryStr = Array.from(utf8Bytes).map(byte => String.fromCharCode(byte)).join('');
         const base64 = btoa(binaryStr);
         return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-      } catch (e) {
-        console.error('Encoding error:', e);
-        return null;
-      }
+      } catch (e) { return null; }
     };
 
     const decodeData = (encoded) => {
       try {
         let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
-        while (base64.length % 4) {
-          base64 += '=';
-        }
+        while (base64.length % 4) base64 += '=';
         const binaryStr = atob(base64);
         const utf8Bytes = new Uint8Array(binaryStr.split('').map(char => char.charCodeAt(0)));
-        const jsonStr = new TextDecoder().decode(utf8Bytes);
-        return JSON.parse(jsonStr);
-      } catch (e) {
-        console.error('Decoding error:', e);
-        return null;
-      }
+        return JSON.parse(new TextDecoder().decode(utf8Bytes));
+      } catch (e) { return null; }
     };
 
-    // Grid generation algorithm
+    const shuffleArray = (arr) => {
+      const s = [...arr];
+      for (let i = s.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [s[i], s[j]] = [s[j], s[i]];
+      }
+      return s;
+    };
+
     const generateWordSearchGrid = (words, gridSize, allowDiagonal, allowReverse) => {
       const grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''));
       const placements = [];
-      const directions = [
-        { dx: 1, dy: 0, name: 'horizontal' },
-        { dx: 0, dy: 1, name: 'vertical' },
-      ];
-      
-      if (allowDiagonal) {
-        directions.push(
-          { dx: 1, dy: 1, name: 'diagonal-down' },
-          { dx: 1, dy: -1, name: 'diagonal-up' }
-        );
-      }
+      const directions = [{ dx: 1, dy: 0 }, { dx: 0, dy: 1 }];
+      if (allowDiagonal) directions.push({ dx: 1, dy: 1 }, { dx: 1, dy: -1 });
 
-      const canPlace = (word, startX, startY, dx, dy) => {
+      const canPlace = (word, sx, sy, dx, dy) => {
         for (let i = 0; i < word.length; i++) {
-          const x = startX + i * dx;
-          const y = startY + i * dy;
+          const x = sx + i * dx, y = sy + i * dy;
           if (x < 0 || x >= gridSize || y < 0 || y >= gridSize) return false;
           if (grid[y][x] !== '' && grid[y][x] !== word[i]) return false;
         }
         return true;
       };
 
-      const placeWord = (word, startX, startY, dx, dy) => {
+      const placeWord = (word, sx, sy, dx, dy) => {
         const cells = [];
         for (let i = 0; i < word.length; i++) {
-          const x = startX + i * dx;
-          const y = startY + i * dy;
+          const x = sx + i * dx, y = sy + i * dy;
           grid[y][x] = word[i];
           cells.push({ x, y });
         }
         return cells;
       };
 
-      const sortedWords = [...words].sort((a, b) => b.length - a.length);
-
-      for (const originalWord of sortedWords) {
-        let word = originalWord.toUpperCase();
-        let placed = false;
-        let attempts = 0;
-        const maxAttempts = 100;
-
-        while (!placed && attempts < maxAttempts) {
+      const englishWords = words.map(w => w.english.toUpperCase());
+      [...englishWords].sort((a, b) => b.length - a.length).forEach(word => {
+        let placed = false, attempts = 0;
+        while (!placed && attempts < 100) {
           const shouldReverse = allowReverse && Math.random() > 0.5;
-          const wordToPlace = shouldReverse ? word.split('').reverse().join('') : word;
+          const w = shouldReverse ? word.split('').reverse().join('') : word;
           const dir = directions[Math.floor(Math.random() * directions.length)];
-          const startX = Math.floor(Math.random() * gridSize);
-          const startY = Math.floor(Math.random() * gridSize);
-
-          if (canPlace(wordToPlace, startX, startY, dir.dx, dir.dy)) {
-            const cells = placeWord(wordToPlace, startX, startY, dir.dx, dir.dy);
-            placements.push({
-              word: originalWord.toUpperCase(),
-              cells,
-              direction: dir.name,
-              reversed: shouldReverse
-            });
+          const sx = Math.floor(Math.random() * gridSize);
+          const sy = Math.floor(Math.random() * gridSize);
+          if (canPlace(w, sx, sy, dir.dx, dir.dy)) {
+            placements.push({ word, cells: placeWord(w, sx, sy, dir.dx, dir.dy), reversed: shouldReverse });
             placed = true;
           }
           attempts++;
         }
-      }
+      });
 
-      const isKorean = words.some(word => /[가-힣]/.test(word));
-      const koreanChars = '가나다라마바사아자차카타파하고노도로모보소오조초코토포호구누두루무부수우주추쿠투푸후';
-      const englishChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      const fillChars = isKorean ? koreanChars : englishChars;
-
-      for (let y = 0; y < gridSize; y++) {
-        for (let x = 0; x < gridSize; x++) {
-          if (grid[y][x] === '') {
-            grid[y][x] = fillChars[Math.floor(Math.random() * fillChars.length)];
-          }
-        }
-      }
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      for (let y = 0; y < gridSize; y++)
+        for (let x = 0; x < gridSize; x++)
+          if (grid[y][x] === '') grid[y][x] = chars[Math.floor(Math.random() * 26)];
 
       return { grid, placements };
     };
 
-    // Confetti component
     const Confetti = ({ active }) => {
       if (!active) return null;
-      
-      const confettiPieces = Array(50).fill(null).map((_, i) => ({
-        id: i,
-        left: Math.random() * 100,
-        delay: Math.random() * 2,
-        duration: 2 + Math.random() * 2,
+      const pieces = Array(50).fill(null).map((_, i) => ({
+        id: i, left: Math.random() * 100, delay: Math.random() * 2, duration: 2 + Math.random() * 2,
         color: ['#FFD93D', '#6BCB77', '#4D96FF', '#FF6B6B', '#C9B1FF'][Math.floor(Math.random() * 5)]
       }));
-
       return (
         <div className="confetti-container">
-          {confettiPieces.map(piece => (
-            <div
-              key={piece.id}
-              className="confetti-piece"
-              style={{
-                left: `${piece.left}%`,
-                animationDelay: `${piece.delay}s`,
-                animationDuration: `${piece.duration}s`,
-                backgroundColor: piece.color
-              }}
-            />
+          {pieces.map(p => (
+            <div key={p.id} className="confetti-piece" style={{
+              left: `${p.left}%`, animationDelay: `${p.delay}s`,
+              animationDuration: `${p.duration}s`, backgroundColor: p.color
+            }} />
           ))}
         </div>
       );
     };
 
-    // Main App Component
     function EduPuzzleMaker() {
       const [mode, setMode] = useState('home');
       const [puzzleData, setPuzzleData] = useState(null);
@@ -942,221 +639,147 @@
       const [generatedUrl, setGeneratedUrl] = useState('');
       const [baseUrl, setBaseUrl] = useState('');
       const [puzzleCode, setPuzzleCode] = useState('');
-      
       const [grid, setGrid] = useState([]);
       const [placements, setPlacements] = useState([]);
       const [foundWords, setFoundWords] = useState([]);
       const [selecting, setSelecting] = useState(false);
       const [selectedCells, setSelectedCells] = useState([]);
       const [startCell, setStartCell] = useState(null);
-      const [showSuccess, setShowSuccess] = useState(false);
       const [timer, setTimer] = useState(0);
       const [isTimerRunning, setIsTimerRunning] = useState(false);
       const [wrongSelection, setWrongSelection] = useState(false);
+      const [matchingAnswers, setMatchingAnswers] = useState({});
+      const [shuffledMeanings, setShuffledMeanings] = useState([]);
+      const [showResult, setShowResult] = useState(false);
+      const [resultData, setResultData] = useState(null);
+      const [checkedAnswers, setCheckedAnswers] = useState({});
       const gridRef = useRef(null);
 
-      // Check URL for puzzle data on load
       useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const data = params.get('puzzle');
         if (data) {
-          try {
-            const decoded = decodeData(data);
-            if (decoded) {
-              setPuzzleData(decoded);
-              setMode('play');
-            }
-          } catch (e) {
-            console.error('Failed to parse puzzle data');
-          }
+          const decoded = decodeData(data);
+          if (decoded) { setPuzzleData(decoded); setMode('play'); }
         }
-        
-        // Set base URL automatically
-        const currentUrl = window.location.origin + window.location.pathname;
-        setBaseUrl(currentUrl);
+        setBaseUrl(window.location.origin + window.location.pathname);
       }, []);
 
       useEffect(() => {
         if (puzzleData && mode === 'play') {
           const { words, gridSize, allowDiagonal, allowReverse } = puzzleData;
-          const { grid: newGrid, placements: newPlacements } = generateWordSearchGrid(
-            words, gridSize, allowDiagonal, allowReverse
-          );
-          setGrid(newGrid);
-          setPlacements(newPlacements);
-          setFoundWords([]);
-          setTimer(0);
-          setIsTimerRunning(true);
-          setShowSuccess(false);
+          const { grid: g, placements: p } = generateWordSearchGrid(words, gridSize, allowDiagonal, allowReverse);
+          setGrid(g); setPlacements(p); setFoundWords([]); setTimer(0);
+          setIsTimerRunning(true); setMatchingAnswers({}); setCheckedAnswers({});
+          setShowResult(false); setShuffledMeanings(shuffleArray(words.map(w => w.korean)));
         }
       }, [puzzleData, mode]);
 
       useEffect(() => {
         let interval;
-        if (isTimerRunning) {
-          interval = setInterval(() => {
-            setTimer(t => t + 1);
-          }, 1000);
-        }
+        if (isTimerRunning) interval = setInterval(() => setTimer(t => t + 1), 1000);
         return () => clearInterval(interval);
       }, [isTimerRunning]);
 
-      useEffect(() => {
-        if (placements.length > 0 && foundWords.length === placements.length) {
-          setIsTimerRunning(false);
-          setTimeout(() => setShowSuccess(true), 500);
-        }
-      }, [foundWords, placements]);
-
-      const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-      };
+      const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
       const generatePuzzle = () => {
-        const words = wordsInput
-          .split(/[,\n]/)
-          .map(w => w.trim())
-          .filter(w => w.length > 0 && /^[a-zA-Z가-힣]+$/.test(w))
-          .slice(0, 15);
-
-        if (words.length === 0) {
-          alert('유효한 단어를 입력해주세요!');
-          return;
-        }
-
+        const words = wordsInput.split('\n').filter(l => l.trim()).map(line => {
+          const parts = line.split(/[,:]/).map(p => p.trim());
+          if (parts.length >= 2 && /^[a-zA-Z]+$/.test(parts[0]) && parts[1])
+            return { english: parts[0], korean: parts[1] };
+          return null;
+        }).filter(Boolean).slice(0, 15);
+        if (words.length === 0) { alert('유효한 단어를 입력해주세요!\n형식: 영어단어, 한글뜻'); return; }
         const gridSize = difficulty === 'easy' ? 10 : 15;
-        const allowDiagonal = difficulty === 'hard';
-        const allowReverse = difficulty === 'hard';
-
-        const data = {
-          title: title || '단어 찾기 퍼즐',
-          words,
-          gridSize,
-          allowDiagonal,
-          allowReverse
-        };
-
+        const data = { title: title || '영어 단어 학습', words, gridSize, allowDiagonal: difficulty === 'hard', allowReverse: difficulty === 'hard' };
         const encoded = encodeData(data);
         setPuzzleCode(encoded);
-        
-        if (baseUrl) {
-          const cleanBaseUrl = baseUrl.trim().replace(/\/$/, '');
-          setGeneratedUrl(`${cleanBaseUrl}?puzzle=${encoded}`);
-        } else {
-          setGeneratedUrl('');
-        }
+        if (baseUrl) setGeneratedUrl(`${baseUrl.replace(/\/$/, '')}?puzzle=${encoded}`);
       };
 
-      const updateFullUrl = (newBaseUrl) => {
-        setBaseUrl(newBaseUrl);
-        if (puzzleCode && newBaseUrl) {
-          const cleanBaseUrl = newBaseUrl.trim().replace(/\/$/, '');
-          setGeneratedUrl(`${cleanBaseUrl}?puzzle=${puzzleCode}`);
-        } else {
-          setGeneratedUrl('');
-        }
-      };
-
-      const copyUrl = () => {
-        navigator.clipboard.writeText(generatedUrl);
-        alert('링크가 복사되었습니다!');
-      };
+      const copyUrl = () => { navigator.clipboard.writeText(generatedUrl); alert('링크가 복사되었습니다!'); };
 
       const getCellsInLine = (start, end) => {
         if (!start || !end) return [];
-        
-        const dx = Math.sign(end.x - start.x);
-        const dy = Math.sign(end.y - start.y);
-        
-        if (dx !== 0 && dy !== 0 && Math.abs(end.x - start.x) !== Math.abs(end.y - start.y)) {
-          return [start];
-        }
-        
+        const dx = Math.sign(end.x - start.x), dy = Math.sign(end.y - start.y);
+        if (dx !== 0 && dy !== 0 && Math.abs(end.x - start.x) !== Math.abs(end.y - start.y)) return [start];
         const cells = [];
-        let x = start.x;
-        let y = start.y;
-        
-        while (true) {
-          cells.push({ x, y });
-          if (x === end.x && y === end.y) break;
-          x += dx;
-          y += dy;
-          if (cells.length > 20) break;
-        }
-        
+        let x = start.x, y = start.y;
+        while (true) { cells.push({ x, y }); if (x === end.x && y === end.y) break; x += dx; y += dy; if (cells.length > 20) break; }
         return cells;
       };
 
-      const handleCellMouseDown = (x, y) => {
-        setSelecting(true);
-        setStartCell({ x, y });
-        setSelectedCells([{ x, y }]);
-        setWrongSelection(false);
-      };
-
-      const handleCellMouseEnter = (x, y) => {
-        if (selecting && startCell) {
-          const cells = getCellsInLine(startCell, { x, y });
-          setSelectedCells(cells);
-        }
-      };
-
+      const handleCellMouseDown = (x, y) => { setSelecting(true); setStartCell({ x, y }); setSelectedCells([{ x, y }]); setWrongSelection(false); };
+      const handleCellMouseEnter = (x, y) => { if (selecting && startCell) setSelectedCells(getCellsInLine(startCell, { x, y })); };
       const handleMouseUp = () => {
         if (selecting && selectedCells.length > 1) {
-          const selectedWord = selectedCells.map(c => grid[c.y][c.x]).join('');
-          const reversedWord = selectedWord.split('').reverse().join('');
-          
-          const matchedPlacement = placements.find(p => {
-            const placementWord = p.word;
-            return (selectedWord === placementWord || reversedWord === placementWord) &&
-              !foundWords.includes(p.word);
-          });
-
-          if (matchedPlacement) {
-            setFoundWords([...foundWords, matchedPlacement.word]);
-          } else {
-            setWrongSelection(true);
-            setTimeout(() => setWrongSelection(false), 300);
-          }
+          const word = selectedCells.map(c => grid[c.y][c.x]).join('');
+          const rev = word.split('').reverse().join('');
+          const match = placements.find(p => (word === p.word || rev === p.word) && !foundWords.includes(p.word));
+          if (match) setFoundWords([...foundWords, match.word]);
+          else { setWrongSelection(true); setTimeout(() => setWrongSelection(false), 300); }
         }
-        setSelecting(false);
-        setSelectedCells([]);
-        setStartCell(null);
+        setSelecting(false); setSelectedCells([]); setStartCell(null);
       };
 
-      const isCellSelected = (x, y) => {
-        return selectedCells.some(c => c.x === x && c.y === y);
-      };
-
+      const isCellSelected = (x, y) => selectedCells.some(c => c.x === x && c.y === y);
       const getFoundColor = (x, y) => {
         const colors = ['#FFD93D', '#6BCB77', '#4D96FF', '#FF6B6B', '#C9B1FF', '#FF9F45', '#45FFC8'];
         for (let i = 0; i < placements.length; i++) {
           const p = placements[i];
-          if (foundWords.includes(p.word) && p.cells.some(c => c.x === x && c.y === y)) {
+          if (foundWords.includes(p.word) && p.cells.some(c => c.x === x && c.y === y))
             return colors[foundWords.indexOf(p.word) % colors.length];
-          }
         }
         return null;
       };
 
-      const resetGame = () => {
-        if (puzzleData) {
-          const { words, gridSize, allowDiagonal, allowReverse } = puzzleData;
-          const { grid: newGrid, placements: newPlacements } = generateWordSearchGrid(
-            words, gridSize, allowDiagonal, allowReverse
-          );
-          setGrid(newGrid);
-          setPlacements(newPlacements);
-          setFoundWords([]);
-          setTimer(0);
-          setIsTimerRunning(true);
-          setShowSuccess(false);
-        }
+      const handleMatchingChange = (eng, meaning) => setMatchingAnswers(prev => ({ ...prev, [eng]: meaning }));
+
+      const checkAnswers = () => {
+        setIsTimerRunning(false);
+        const words = puzzleData.words;
+        let correct = 0;
+        const wrong = [];
+        const checked = {};
+        words.forEach(w => {
+          const key = w.english.toUpperCase();
+          const ans = matchingAnswers[key];
+          const isCorrect = ans === w.korean;
+          checked[key] = isCorrect;
+          if (isCorrect) correct++;
+          else wrong.push({ english: w.english, userAnswer: ans || '(미선택)', correctAnswer: w.korean });
+        });
+        setCheckedAnswers(checked);
+        const total = words.length * 2;
+        const totalCorrect = foundWords.length + correct;
+        setResultData({
+          score: Math.round((totalCorrect / total) * 100),
+          wordSearchCorrect: foundWords.length, wordSearchTotal: placements.length,
+          matchingCorrect: correct, matchingTotal: words.length,
+          wrongAnswers: wrong, time: timer, isPerfect: totalCorrect === total
+        });
+        setShowResult(true);
       };
 
-      // Home Screen
+      const retryWrong = () => {
+        setShowResult(false);
+        const newAns = {};
+        puzzleData.words.forEach(w => { const key = w.english.toUpperCase(); if (checkedAnswers[key]) newAns[key] = matchingAnswers[key]; });
+        setMatchingAnswers(newAns); setCheckedAnswers({}); setIsTimerRunning(true);
+      };
+
+      const resetGame = () => {
+        if (!puzzleData) return;
+        const { words, gridSize, allowDiagonal, allowReverse } = puzzleData;
+        const { grid: g, placements: p } = generateWordSearchGrid(words, gridSize, allowDiagonal, allowReverse);
+        setGrid(g); setPlacements(p); setFoundWords([]); setTimer(0);
+        setIsTimerRunning(true); setMatchingAnswers({}); setCheckedAnswers({});
+        setShowResult(false); setShuffledMeanings(shuffleArray(words.map(w => w.korean)));
+      };
+
+      const isAllComplete = () => puzzleData && foundWords.length === placements.length && puzzleData.words.every(w => matchingAnswers[w.english.toUpperCase()]);
+
       if (mode === 'home') {
         return (
           <div className="app-container">
@@ -1164,9 +787,8 @@
               <div className="logo-container">
                 <div className="logo-icon">🔍</div>
                 <h1 className="main-title">Edu-Puzzle Maker</h1>
-                <p className="subtitle">재미있는 단어 찾기 퍼즐을 만들어보세요!</p>
+                <p className="subtitle">재미있는 영어 단어 학습 퍼즐!</p>
               </div>
-              
               <div className="home-buttons">
                 <button className="home-btn create-btn" onClick={() => setMode('create')}>
                   <span className="btn-icon">✏️</span>
@@ -1174,89 +796,46 @@
                   <span className="btn-desc">선생님용</span>
                 </button>
               </div>
-              
               <div className="home-features">
-                <div className="feature">
-                  <span className="feature-icon">📚</span>
-                  <span>교과서 단어로 퍼즐 생성</span>
-                </div>
-                <div className="feature">
-                  <span className="feature-icon">🔗</span>
-                  <span>링크 하나로 간편 공유</span>
-                </div>
-                <div className="feature">
-                  <span className="feature-icon">📱</span>
-                  <span>PC, 태블릿 모두 지원</span>
-                </div>
+                <div className="feature"><span>🔤</span><span>단어 찾기 퍼즐</span></div>
+                <div className="feature"><span>🔗</span><span>영어-한글 뜻 연결</span></div>
+                <div className="feature"><span>✅</span><span>자동 채점</span></div>
               </div>
             </div>
           </div>
         );
       }
 
-      // Create Mode
       if (mode === 'create') {
         return (
           <div className="app-container">
             <div className="create-screen">
-              <button className="back-btn" onClick={() => setMode('home')}>
-                ← 홈으로
-              </button>
-              
+              <button className="back-btn" onClick={() => setMode('home')}>← 홈으로</button>
               <h2 className="screen-title">🎯 퍼즐 만들기</h2>
-              
               <div className="form-group">
                 <label>퍼즐 제목</label>
-                <input
-                  type="text"
-                  placeholder="예: 3단원 필수 영단어"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="text-input"
-                />
+                <input type="text" placeholder="예: 3단원 필수 영단어" value={title} onChange={(e) => setTitle(e.target.value)} className="text-input" />
               </div>
-              
               <div className="form-group">
-                <label>찾을 단어 (쉼표 또는 줄바꿈으로 구분, 최대 15개)</label>
-                <textarea
-                  placeholder="apple, banana, cat&#10;또는&#10;사과&#10;바나나&#10;고양이"
-                  value={wordsInput}
-                  onChange={(e) => setWordsInput(e.target.value)}
-                  className="words-input"
-                  rows={6}
-                />
+                <label>단어 입력 (영어단어, 한글뜻) - 최대 15개</label>
+                <textarea placeholder={"apple, 사과\nbanana, 바나나\ncat, 고양이"} value={wordsInput} onChange={(e) => setWordsInput(e.target.value)} className="words-input" rows={8} />
+                <p className="input-hint">💡 한 줄에 하나씩, 쉼표로 영어와 한글을 구분</p>
               </div>
-              
               <div className="form-group">
                 <label>난이도</label>
                 <div className="difficulty-selector">
-                  <button
-                    className={`diff-btn ${difficulty === 'easy' ? 'active' : ''}`}
-                    onClick={() => setDifficulty('easy')}
-                  >
-                    <span className="diff-icon">😊</span>
-                    <span className="diff-name">쉬움</span>
-                    <span className="diff-desc">10×10, 가로/세로만</span>
+                  <button className={`diff-btn ${difficulty === 'easy' ? 'active' : ''}`} onClick={() => setDifficulty('easy')}>
+                    <span className="diff-icon">😊</span><span className="diff-name">쉬움</span><span className="diff-desc">10×10, 가로/세로</span>
                   </button>
-                  <button
-                    className={`diff-btn ${difficulty === 'hard' ? 'active' : ''}`}
-                    onClick={() => setDifficulty('hard')}
-                  >
-                    <span className="diff-icon">🔥</span>
-                    <span className="diff-name">어려움</span>
-                    <span className="diff-desc">15×15, 대각선+역방향</span>
+                  <button className={`diff-btn ${difficulty === 'hard' ? 'active' : ''}`} onClick={() => setDifficulty('hard')}>
+                    <span className="diff-icon">🔥</span><span className="diff-name">어려움</span><span className="diff-desc">15×15, 대각선+역방향</span>
                   </button>
                 </div>
               </div>
-              
-              <button className="generate-btn" onClick={generatePuzzle}>
-                ✨ 퍼즐 생성하기
-              </button>
-              
+              <button className="generate-btn" onClick={generatePuzzle}>✨ 퍼즐 생성하기</button>
               {puzzleCode && (
                 <div className="url-result">
                   <h3>🎉 퍼즐이 생성되었습니다!</h3>
-                  
                   <div className="result-section">
                     <label>📎 학생 배포용 링크</label>
                     <div className="url-box">
@@ -1264,18 +843,8 @@
                       <button className="copy-btn" onClick={copyUrl}>복사</button>
                     </div>
                   </div>
-                  
                   <div className="action-buttons">
-                    <button 
-                      className="preview-btn"
-                      onClick={() => {
-                        const decoded = decodeData(puzzleCode);
-                        setPuzzleData(decoded);
-                        setMode('play');
-                      }}
-                    >
-                      👀 미리보기
-                    </button>
+                    <button className="preview-btn" onClick={() => { setPuzzleData(decodeData(puzzleCode)); setMode('play'); }}>👀 미리보기</button>
                   </div>
                 </div>
               )}
@@ -1284,125 +853,102 @@
         );
       }
 
-      // Play Mode
       if (mode === 'play' && grid.length > 0) {
         const wordsToFind = placements.map(p => p.word);
         const gridSize = grid.length;
-        
+        const wsComplete = foundWords.length === placements.length;
+        const matchComplete = puzzleData.words.every(w => matchingAnswers[w.english.toUpperCase()]);
+
         return (
           <div className="app-container">
-            <Confetti active={showSuccess} />
-            
-            {showSuccess && (
-              <div className="success-overlay">
-                <div className="success-modal">
-                  <div className="success-icon">🎉</div>
-                  <h2>축하합니다!</h2>
-                  <p>모든 단어를 찾았어요!</p>
-                  <p className="final-time">완료 시간: {formatTime(timer)}</p>
-                  <div className="success-buttons">
-                    <button className="play-again-btn" onClick={resetGame}>
-                      🔄 다시 하기
-                    </button>
-                    <button className="home-btn-small" onClick={() => {
-                      window.history.pushState({}, '', window.location.pathname);
-                      setMode('home');
-                      setPuzzleData(null);
-                    }}>
-                      🏠 홈으로
-                    </button>
+            <Confetti active={resultData?.isPerfect} />
+            {showResult && resultData && (
+              <div className="result-modal">
+                <div className="result-content">
+                  <div className="result-icon">{resultData.isPerfect ? '🎉' : '📝'}</div>
+                  <h2>{resultData.isPerfect ? '완벽해요!' : '채점 결과'}</h2>
+                  <p className="result-score">점수: {resultData.score}점</p>
+                  <div className="result-details">
+                    <p>⏱️ 소요 시간: {formatTime(resultData.time)}</p>
+                    <p>🔍 단어 찾기: {resultData.wordSearchCorrect} / {resultData.wordSearchTotal}</p>
+                    <p>🔗 뜻 연결: {resultData.matchingCorrect} / {resultData.matchingTotal}</p>
+                    {resultData.wrongAnswers.length > 0 && (
+                      <div className="wrong-list">
+                        <h4>❌ 틀린 문제</h4>
+                        {resultData.wrongAnswers.map((item, i) => (
+                          <div key={i} className="wrong-item">
+                            <strong>{item.english}</strong><br/>
+                            내 답: {item.userAnswer}<br/>
+                            정답: <span style={{color: '#6BCB77'}}>{item.correctAnswer}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="result-buttons">
+                    {!resultData.isPerfect && <button className="retry-btn" onClick={retryWrong}>🔄 다시 풀기</button>}
+                    <button className="play-again-btn" onClick={resetGame}>🆕 새로 시작</button>
+                    <button className="home-btn-small" onClick={() => { window.history.pushState({}, '', window.location.pathname); setMode('home'); setPuzzleData(null); }}>🏠 홈으로</button>
                   </div>
                 </div>
               </div>
             )}
-            
             <div className="play-screen">
               <div className="play-header">
-                <h2 className="puzzle-title">{puzzleData?.title || '단어 찾기'}</h2>
+                <h2 className="puzzle-title">{puzzleData?.title || '영어 단어 학습'}</h2>
                 <div className="timer">⏱️ {formatTime(timer)}</div>
               </div>
-              
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill"
-                  style={{ width: `${(foundWords.length / wordsToFind.length) * 100}%` }}
-                />
-                <span className="progress-text">
-                  {foundWords.length} / {wordsToFind.length}
-                </span>
+              <div className="section-box" style={{marginTop: 0, marginBottom: '1rem'}}>
+                <h3>🔍 단어 찾기 <span className={`status-badge ${wsComplete ? 'complete' : 'incomplete'}`}>{wsComplete ? '완료!' : `${foundWords.length}/${wordsToFind.length}`}</span></h3>
               </div>
-              
               <div className="grid-wrapper">
-                <div 
-                  className={`grid-container ${wrongSelection ? 'shake' : ''} size-${gridSize}`}
-                  style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }}
-                  ref={gridRef}
-                  onMouseUp={handleMouseUp}
-                  onMouseLeave={handleMouseUp}
-                  onTouchEnd={handleMouseUp}
-                >
-                  {grid.map((row, y) =>
-                    row.map((cell, x) => {
-                      const foundColor = getFoundColor(x, y);
-                      return (
-                        <div
-                          key={`${x}-${y}`}
-                          className={`grid-cell ${isCellSelected(x, y) ? 'selected' : ''} ${foundColor ? 'found' : ''}`}
-                          style={foundColor ? { backgroundColor: foundColor } : {}}
-                          onMouseDown={() => handleCellMouseDown(x, y)}
-                          onMouseEnter={() => handleCellMouseEnter(x, y)}
-                          onTouchStart={(e) => {
-                            e.preventDefault();
-                            handleCellMouseDown(x, y);
-                          }}
-                          onTouchMove={(e) => {
-                            e.preventDefault();
-                            const touch = e.touches[0];
-                            const element = document.elementFromPoint(touch.clientX, touch.clientY);
-                            if (element && element.dataset.x !== undefined) {
-                              handleCellMouseEnter(parseInt(element.dataset.x), parseInt(element.dataset.y));
-                            }
-                          }}
-                          data-x={x}
-                          data-y={y}
-                        >
-                          {cell}
-                        </div>
-                      );
-                    })
-                  )}
+                <div className={`grid-container ${wrongSelection ? 'shake' : ''} size-${gridSize}`} style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }} ref={gridRef} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} onTouchEnd={handleMouseUp}>
+                  {grid.map((row, y) => row.map((cell, x) => {
+                    const color = getFoundColor(x, y);
+                    return (
+                      <div key={`${x}-${y}`} className={`grid-cell ${isCellSelected(x, y) ? 'selected' : ''} ${color ? 'found' : ''}`} style={color ? { backgroundColor: color } : {}}
+                        onMouseDown={() => handleCellMouseDown(x, y)} onMouseEnter={() => handleCellMouseEnter(x, y)}
+                        onTouchStart={(e) => { e.preventDefault(); handleCellMouseDown(x, y); }}
+                        onTouchMove={(e) => { e.preventDefault(); const el = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY); if (el?.dataset.x) handleCellMouseEnter(+el.dataset.x, +el.dataset.y); }}
+                        data-x={x} data-y={y}>{cell}</div>
+                    );
+                  }))}
                 </div>
               </div>
-              
-              <div className="word-list">
+              <div className="section-box">
                 <h3>찾아야 할 단어</h3>
-                <div className="words">
-                  {wordsToFind.map((word, i) => (
-                    <span 
-                      key={i} 
-                      className={`word-item ${foundWords.includes(word) ? 'found' : ''}`}
-                    >
-                      {word}
-                    </span>
-                  ))}
-                </div>
+                <div className="words">{wordsToFind.map((word, i) => (<span key={i} className={`word-item ${foundWords.includes(word) ? 'found' : ''}`}>{word}</span>))}</div>
               </div>
-              
-              <button className="reset-btn" onClick={resetGame}>
-                🔄 새로운 배치로 다시 시작
-              </button>
+              <div className="section-box">
+                <h3>🔗 뜻 연결하기 <span className={`status-badge ${matchComplete ? 'complete' : 'incomplete'}`}>{matchComplete ? '완료!' : `${Object.keys(matchingAnswers).length}/${puzzleData.words.length}`}</span></h3>
+                {puzzleData.words.map((word, i) => {
+                  const key = word.english.toUpperCase();
+                  const checked = checkedAnswers.hasOwnProperty(key);
+                  const correct = checkedAnswers[key];
+                  return (
+                    <div key={i} className={`matching-row ${checked ? (correct ? 'correct' : 'incorrect') : ''}`}>
+                      <div className="english-word">{word.english}</div>
+                      <span className="arrow-icon">→</span>
+                      <select className={`meaning-select ${checked ? (correct ? 'correct' : 'incorrect') : ''}`} value={matchingAnswers[key] || ''} onChange={(e) => handleMatchingChange(key, e.target.value)} disabled={checked && correct}>
+                        <option value="">뜻을 선택하세요</option>
+                        {shuffledMeanings.map((m, j) => <option key={j} value={m}>{m}</option>)}
+                      </select>
+                      {checked && !correct && <div className="correct-answer">정답: {word.korean}</div>}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="submit-section">
+                {!isAllComplete() && <p className="incomplete-warning">⚠️ 모든 활동을 완료해주세요!</p>}
+                <button className="submit-btn" onClick={checkAnswers} disabled={!isAllComplete()}>✅ 활동 종료 & 채점하기</button>
+              </div>
+              <button className="reset-btn" onClick={resetGame}>🔄 처음부터 다시 시작</button>
             </div>
           </div>
         );
       }
-
-      return (
-        <div className="app-container">
-          <div className="loading">로딩 중...</div>
-        </div>
-      );
+      return <div className="app-container"><div className="loading">로딩 중...</div></div>;
     }
-
     ReactDOM.createRoot(document.getElementById('root')).render(<EduPuzzleMaker />);
   </script>
 </body>
