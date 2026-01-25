@@ -615,6 +615,10 @@
       padding: 0.4rem 0.8rem;
       border-radius: 20px;
     }
+    .teacher-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
     .answer-toggle-btn {
       padding: 0.6rem 1.2rem;
       border: none;
@@ -631,6 +635,20 @@
     }
     .answer-toggle-btn.active {
       background: linear-gradient(135deg, #6BCB77 0%, #4D96FF 100%);
+    }
+    .back-to-create-btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #FF6B6B 0%, #FFD93D 100%);
+      color: #333;
+      font-family: 'Jua', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .back-to-create-btn:hover {
+      transform: scale(1.05);
     }
     .matching-row.show-answer {
       background: #f0f8ff;
@@ -685,6 +703,8 @@
       .english-word, .meaning-select { width: 100%; flex: none; }
       .arrow-icon { transform: rotate(90deg); }
       .teacher-controls { flex-direction: column; gap: 0.5rem; text-align: center; }
+      .teacher-buttons { flex-direction: column; width: 100%; }
+      .teacher-buttons button { width: 100%; }
       .word-pair-row { flex-wrap: wrap; }
       .word-input { min-width: 100px; }
       .arrow-divider { display: none; }
@@ -1214,9 +1234,14 @@
               {isPreviewMode && (
                 <div className="teacher-controls">
                   <span className="teacher-badge">👩‍🏫 교사 미리보기</span>
-                  <button className={`answer-toggle-btn ${showAnswers ? 'active' : ''}`} onClick={() => setShowAnswers(!showAnswers)}>
-                    {showAnswers ? '🙈 정답 숨기기' : '👁️ 정답 보기'}
-                  </button>
+                  <div className="teacher-buttons">
+                    <button className={`answer-toggle-btn ${showAnswers ? 'active' : ''}`} onClick={() => setShowAnswers(!showAnswers)}>
+                      {showAnswers ? '🙈 정답 숨기기' : '👁️ 정답 보기'}
+                    </button>
+                    <button className="back-to-create-btn" onClick={() => { setMode('create'); setShowAnswers(false); }}>
+                      ✏️ 제작으로 돌아가기
+                    </button>
+                  </div>
                 </div>
               )}
               <div className="section-box" style={{marginTop: 0, marginBottom: '1rem'}}>
